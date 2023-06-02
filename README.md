@@ -29,7 +29,7 @@ TO CONSIDER:
 TO DO:
 
 - Setting up the Maven project and project structure. [DONE]
-- Designing and implementing the Swing GUI. [IN-PROGRESS]
+- Designing and implementing the Swing GUI. [DONE]
 - Implementing the multithreaded file copying functionality.
 - Implementing the input validation and error handling.
 - Implementing the unit tests.
