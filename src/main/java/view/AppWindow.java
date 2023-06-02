@@ -3,7 +3,11 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+
 import java.awt.BorderLayout;
+
 
 /**
  * Klasa odpowiadająca za ustawianie GUI
@@ -29,18 +33,37 @@ import java.awt.BorderLayout;
 
         frame.setLayout(new BorderLayout()); // use border layout
 
-        JPanel buttonPanel = new JPanel(); // create a new panel for the buttons
+        JPanel northButtonPanel = new JPanel(); // create a new panel for the buttons
+        northButtonPanel.setLayout(new BoxLayout(northButtonPanel, BoxLayout.LINE_AXIS)); // set the layout to line up components from left to right
 
-        sourceButton = new JButton("Select Source"); // create source button
-        destinationButton = new JButton("Select Destination"); // create destination button
-        startButton = new JButton("Start"); // create start button
+        sourceButton = new JButton("Select Source");
+        destinationButton = new JButton("Select Destination");
+        startButton = new JButton("Start");
 
-        buttonPanel.add(sourceButton); // add source button to the panel
-        buttonPanel.add(destinationButton); // add destination button to the panel
-        buttonPanel.add(startButton); // add start button to the panel
+        northButtonPanel.add(sourceButton);
+        northButtonPanel.add(destinationButton);
+        northButtonPanel.add(Box.createHorizontalGlue()); // add "glue" to take up extra space
+        northButtonPanel.add(startButton);
 
-        frame.add(buttonPanel, BorderLayout.SOUTH); // add the panel to the frame at the bottom
+        frame.add(northButtonPanel, BorderLayout.NORTH); // add the button panel to the north
 
+
+        // --------------- LEGACY CODE ----------------
+        // 
+
+        // JPanel buttonPanel = new JPanel(); // create a new panel for the buttons
+
+        // sourceButton = new JButton("Select Source"); // create source button
+        // destinationButton = new JButton("Select Destination"); // create destination button
+        // startButton = new JButton("Start"); // create start button
+
+        // buttonPanel.add(sourceButton); // add source button to the panel
+        // buttonPanel.add(destinationButton); // add destination button to the panel
+        // buttonPanel.add(startButton); // add start button to the panel
+
+        // frame.add(buttonPanel, BorderLayout.NORTH); // add the panel to the frame at the bottom
+
+        // --------------- LEGACY CODE ----------------
     }
 
     public void show() {
