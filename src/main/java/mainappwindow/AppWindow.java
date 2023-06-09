@@ -1,5 +1,6 @@
-package view;
+package mainappwindow;
 
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -67,6 +68,21 @@ import java.awt.*;
         bottomPanel.add(statusLabel, BorderLayout.EAST);
 
         frame.add(bottomPanel, BorderLayout.SOUTH); // add the bottom panel to the south
+    }
+
+    /**
+     * Method that sets up an object that listens to actions performed on the screen
+     * @param actionListener
+     * @author Kacper Fugas
+     */
+    public void setUpActionListener(ActionListener actionListener){
+        sourceButton.setActionCommand("sourceButtonClicked");
+        destinationButton.setActionCommand("destinationButtonClicked");
+        startButton.setActionCommand("startButtonClicked");
+
+        sourceButton.addActionListener(actionListener);
+        destinationButton.addActionListener(actionListener);
+        startButton.addActionListener(actionListener);
     }
 
     public void show() {
