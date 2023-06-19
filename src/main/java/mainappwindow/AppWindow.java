@@ -1,5 +1,6 @@
-package view;
+package mainappwindow;
 
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -9,6 +10,7 @@ import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import javax.swing.JSeparator;
 import java.awt.*;
+import javax.swing.JTextField;
 
 
 /**
@@ -22,6 +24,8 @@ import java.awt.*;
     private JButton sourceButton;
     private JButton destinationButton;
     private JButton startButton;
+    private JTextField fileMaskField;
+    private JLabel statusLabel;
 
     public AppWindow() {
         frame = new JFrame(); // creates a new JFrame
@@ -41,10 +45,12 @@ import java.awt.*;
         sourceButton = new JButton("Select Source"); // create source button
         destinationButton = new JButton("Select Destination"); // create destination button
         startButton = new JButton("Start"); // create start button
+        fileMaskField = new JTextField("*.*");
 
         northButtonPanel.add(sourceButton); // add source button to the panel
         northButtonPanel.add(destinationButton); // add destination button to the panel
         northButtonPanel.add(Box.createHorizontalGlue()); // add "glue" to take up extra space
+        northButtonPanel.add(fileMaskField);
         northButtonPanel.add(startButton); // add start button to the panel
 
         frame.add(northButtonPanel, BorderLayout.NORTH); // add the button panel to the north
@@ -62,14 +68,37 @@ import java.awt.*;
         bottomPanel.add(new JSeparator(), BorderLayout.NORTH);
 
         // Add a status label to the right of the bottom panel
-        JLabel statusLabel = new JLabel("Waiting for source input...");
+        statusLabel = new JLabel("Waiting for source input...");
         statusLabel.setHorizontalAlignment(JLabel.RIGHT);
         bottomPanel.add(statusLabel, BorderLayout.EAST);
 
         frame.add(bottomPanel, BorderLayout.SOUTH); // add the bottom panel to the south
     }
 
+    /**
+     * Method that sets up an object that listens to actions performed on the screen
+     * @param actionListener
+     * @author Kacper Fugas
+     */
+    public void setUpActionListener(ActionListener actionListener){
+        sourceButton.setActionCommand("sourceButtonClicked");
+        destinationButton.setActionCommand("destinationButtonClicked");
+        startButton.setActionCommand("startButtonClicked");
+
+        sourceButton.addActionListener(actionListener);
+        destinationButton.addActionListener(actionListener);
+        startButton.addActionListener(actionListener);
+    }
+
     public void show() {
         frame.setVisible(true); // makes the window visible
+    }
+
+    public JLabel getStatusLabel(){
+        return statusLabel;
+    }
+
+    public JFrame getFrame(){
+        return frame;
     }
 }
