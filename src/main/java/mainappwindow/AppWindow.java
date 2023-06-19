@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import javax.swing.JSeparator;
 import java.awt.*;
+import javax.swing.JTextField;
 
 
 /**
@@ -23,6 +24,8 @@ import java.awt.*;
     private JButton sourceButton;
     private JButton destinationButton;
     private JButton startButton;
+    private JTextField fileMaskField;
+    private JLabel statusLabel;
 
     public AppWindow() {
         frame = new JFrame(); // creates a new JFrame
@@ -42,10 +45,12 @@ import java.awt.*;
         sourceButton = new JButton("Select Source"); // create source button
         destinationButton = new JButton("Select Destination"); // create destination button
         startButton = new JButton("Start"); // create start button
+        fileMaskField = new JTextField("*.*");
 
         northButtonPanel.add(sourceButton); // add source button to the panel
         northButtonPanel.add(destinationButton); // add destination button to the panel
         northButtonPanel.add(Box.createHorizontalGlue()); // add "glue" to take up extra space
+        northButtonPanel.add(fileMaskField);
         northButtonPanel.add(startButton); // add start button to the panel
 
         frame.add(northButtonPanel, BorderLayout.NORTH); // add the button panel to the north
@@ -63,7 +68,7 @@ import java.awt.*;
         bottomPanel.add(new JSeparator(), BorderLayout.NORTH);
 
         // Add a status label to the right of the bottom panel
-        JLabel statusLabel = new JLabel("Waiting for source input...");
+        statusLabel = new JLabel("Waiting for source input...");
         statusLabel.setHorizontalAlignment(JLabel.RIGHT);
         bottomPanel.add(statusLabel, BorderLayout.EAST);
 
@@ -87,5 +92,13 @@ import java.awt.*;
 
     public void show() {
         frame.setVisible(true); // makes the window visible
+    }
+
+    public JLabel getStatusLabel(){
+        return statusLabel;
+    }
+
+    public JFrame getFrame(){
+        return frame;
     }
 }

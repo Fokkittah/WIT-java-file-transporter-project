@@ -4,9 +4,15 @@ import filehandler.FileHandler;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import javax.swing.JOptionPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import view.FileCopyTask;
 
 /**
  * Controller class that handles actions performed on the AppWindow view and communicates them to other classes.
@@ -50,19 +56,51 @@ public class AppWindowController implements ActionListener {
         fileHandler.chooseSourceFilesDirectory();
     }
     public void onStartButtonClicked() {
-        try{
-            fileHandler.fillSourceFiles("dummy");
-            Set<Path> filesToCopy = fileHandler.getSourceFiles();
-            logger.info("Chosen files:");
-            for (Path path : filesToCopy){
-                logger.info(path);
+
+        if (fileHandler.getSourceFilesDirectory() == null || fileHandler.getDestinationDirectory() == null) {
+            JOptionPane.showMessageDialog(appWindow.getFrame(), "Please select source and destination directories", "Error", JOptionPane.ERROR_MESSAGE);
+        } else{
+            // Perform file copying logic here
+
+            try{
+                fileHandler.fillFilePathMap("dummy");
+                Map<Path, Path> sourceDestinationMap = fileHandler.getFilePathMap();
+                Set<Path> filesToCopy = sourceDestinationMap.keySet();
+                logger.info("Chosen files:");
+                for (Path path : filesToCopy){
+                    logger.info(path);
+                }
+
+                //Create destination directory tree
+                fileHandler.createDestinationDirectories();
+
+                // Create a thread pool with the specified number of threads
+                int numThreads = 4;
+                ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+
+                for (Path file : filesToCopy) {
+                    executorService.execute(new FileCopyTask(file, sourceDestinationMap.get(file)));
+                }
+
+                executorService.shutdown();
+
+                try {
+                    executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                int copiedFilesCount = FileCopyTask.getCopiedFilesCount();
+                appWindow.getStatusLabel().setText("Copied files count: " + copiedFilesCount);
+
+
+            }catch (Exception e){
+                //TODO poprawić
+                logger.error("Something went wrong",e);
             }
-        }catch (Exception e){
-            //TODO poprawić
-            logger.error("Something went wrong",e);
+
+
         }
 
-        // TODO walidacja
-        // TODO kopiowanie
     }
 }

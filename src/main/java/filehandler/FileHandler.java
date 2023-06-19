@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 import org.apache.log4j.LogManager;
@@ -21,24 +23,46 @@ import org.apache.log4j.Logger;
 public class FileHandler {
     private String destinationDirectory;
     private String sourceFilesDirectory;
-    private Set<Path> sourceFiles;
+    private Map<Path, Path> filePathMap;
+    private Set<Path> directories;
     private static final Logger logger = LogManager.getLogger(FileHandler.class);
 
     /**
-     * Method that gets the source files from chosen directory and nested directories if required
-     * @param nestedFoldersPattern
+     * Methods that fill the Map with source files from chosen directory and corresponding new paths in target directory
+     * @param matchRegex
      */
-    public void fillSourceFiles(String nestedFoldersPattern) throws IOException {
-        //TODO jak ma działać maska
-        sourceFiles = new HashSet<>();
-        try(DirectoryStream<Path> sourceFilesStream = Files.newDirectoryStream(Path.of(sourceFilesDirectory))){
-            for (Path path : sourceFilesStream){
-                if(path.toFile().isFile()) sourceFiles.add(path);
-                //TODO maska, directories, wyrzucić skróty itd...
+    public void fillFilePathMap(String matchRegex) throws IOException {
+        filePathMap = new HashMap<>();
+        directories = new TreeSet<>();
+        fillFilePathMap(Path.of(sourceFilesDirectory), Path.of(destinationDirectory), matchRegex);
+    }
+    private void fillFilePathMap(Path sourceDir, Path destinationDir, String matchRegex) throws IOException {
+        try(DirectoryStream<Path> sourceFilesStream = Files.newDirectoryStream(sourceDir)){
+            for (Path sourcePath : sourceFilesStream){
+
+                //calculating destination path for current file
+                Path destinationPath = destinationDir.resolve(sourceDir.relativize(sourcePath));
+
+                if(sourcePath.toFile().isDirectory()) {
+                    directories.add(destinationPath);
+                    fillFilePathMap(sourcePath, destinationDir.resolve(sourceDir.relativize(sourcePath)), matchRegex);
+                }else{
+                    if(true) { //TODO if regex matches
+                        filePathMap.put(sourcePath, destinationPath);
+                    }
+                }
             }
         }
     }
-
+    /**
+     * Must be called to create target directories before copying of files
+     */
+    public void createDestinationDirectories() throws IOException {
+        if(directories == null) return;
+        for(Path directory : directories) {
+            Files.createDirectories(directory);
+        }
+    }
 
     public void chooseSourceFilesDirectory(){
         JFileChooser sourceChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
@@ -68,7 +92,16 @@ public class FileHandler {
         return Optional.of(destinationDirectory);
     }
 
-    public Set<Path> getSourceFiles() {
-        return sourceFiles;
+    public Map<Path, Path> getFilePathMap() {
+        return filePathMap;
     }
+
+    public String getDestinationDirectory() {
+        return destinationDirectory;
+    }
+
+    public String getSourceFilesDirectory() {
+        return sourceFilesDirectory;
+    }
+
 }
