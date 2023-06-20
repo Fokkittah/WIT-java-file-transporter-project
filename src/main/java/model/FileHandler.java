@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 import org.apache.log4j.LogManager;
@@ -37,17 +39,17 @@ public class FileHandler {
         fillFilePathMap(Path.of(sourceFilesDirectory), Path.of(destinationDirectory), matchRegex);
     }
     private void fillFilePathMap(Path sourceDir, Path destinationDir, String matchRegex) throws IOException {
-        try(DirectoryStream<Path> sourceFilesStream = Files.newDirectoryStream(sourceDir)){
-            for (Path sourcePath : sourceFilesStream){
-
-                //calculating destination path for current file
+        Pattern pattern = Pattern.compile(matchRegex); // Updated REGEX
+        
+        try (DirectoryStream<Path> sourceFilesStream = Files.newDirectoryStream(sourceDir)) {
+            for (Path sourcePath : sourceFilesStream) {
                 Path destinationPath = destinationDir.resolve(sourceDir.relativize(sourcePath));
 
-                if(sourcePath.toFile().isDirectory()) {
+                if (sourcePath.toFile().isDirectory()) {
                     directories.add(destinationPath);
                     fillFilePathMap(sourcePath, destinationDir.resolve(sourceDir.relativize(sourcePath)), matchRegex);
-                }else{
-                    if(true) { //TODO if regex matches
+                } else { 
+                    if (pattern.matcher(sourcePath.getFileName().toString()).matches()) {
                         filePathMap.put(sourcePath, destinationPath);
                     }
                 }

@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileCopyTask implements Runnable {
     private Path sourceFile;
@@ -23,14 +24,16 @@ public class FileCopyTask implements Runnable {
         }
     }
 
-    private static int copiedFilesCount = 0;
+    private static AtomicInteger copiedFilesCount = new AtomicInteger(0);
+    // private static int copiedFilesCount = 0;
 
-    private static synchronized void incrementCopiedFilesCount() {
-        copiedFilesCount++;
+    private void incrementCopiedFilesCount() {
+        copiedFilesCount.incrementAndGet();
     }
 
-    public static synchronized int getCopiedFilesCount() {
-        return copiedFilesCount;
+    // replaced synchronized method with AtomicInteger method
+    public static int getCopiedFilesCount() {
+        return copiedFilesCount.get();
     }
 }
 
