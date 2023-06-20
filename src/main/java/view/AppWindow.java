@@ -1,4 +1,4 @@
-package mainappwindow;
+package view;
 
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;

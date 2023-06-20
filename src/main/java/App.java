@@ -3,8 +3,8 @@
  */
 
 import javax.swing.SwingUtilities;
-import mainappwindow.AppWindow;
-import mainappwindow.AppWindowController;
+
+import controller.AppWindowController;
 
 public class App {
     public static void main(String[] args) {
