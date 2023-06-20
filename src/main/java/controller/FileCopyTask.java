@@ -6,6 +6,10 @@ import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 
+/**
+ * @author Fokkittah
+ */
+
 public class FileCopyTask implements Runnable {
     private static final Logger logger = Logger.getLogger(FileCopyTask.class);
 

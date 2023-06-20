@@ -58,11 +58,13 @@ public class AppWindowController implements ActionListener {
     public void onSourceButtonClicked(){
         fileHandler.chooseSourceFilesDirectory();
     }
+    
     public void onStartButtonClicked() {
         if (fileHandler.getSourceFilesDirectory() == null || fileHandler.getDestinationDirectory() == null) {
             JOptionPane.showMessageDialog(appWindow.getFrame(), "Please select source and destination directories", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            fileCopyService.copyFiles();
+            String fileMask = appWindow.getFileMask();
+            fileCopyService.copyFiles(fileMask);
             int copiedFilesCount = FileCopyTask.getCopiedFilesCount();
             appWindow.getStatusLabel().setText("Copied files count: " + copiedFilesCount);
         }

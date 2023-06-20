@@ -25,10 +25,10 @@ public class FileCopyService {
         this.threadManager = threadManager;
     }
 
-    public void copyFiles() {
+    public void copyFiles(String fileMask) {
         try{
             logger.info("Starting to fill file path map");
-            fileHandler.fillFilePathMap(".*");
+            fileHandler.fillFilePathMap(fileMask); // Added filemask functionality from AppWindow
             logger.info("Starting to create destination directories");
             fileHandler.createDestinationDirectories();
             
