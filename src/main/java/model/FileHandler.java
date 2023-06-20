@@ -62,7 +62,13 @@ public class FileHandler {
     public void createDestinationDirectories() throws IOException {
         if(directories == null) return;
         for(Path directory : directories) {
-            Files.createDirectories(directory);
+            try {
+                logger.info("Creating directory: " + directory);
+                Files.createDirectories(directory);
+                logger.info("Created directory: " + directory);
+            } catch (IOException e) {
+                logger.error("Failed to create directory: " + directory, e);
+            }
         }
     }
 

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import model.FileHandler;
 
 /**
@@ -13,6 +15,8 @@ import model.FileHandler;
  */
 
 public class FileCopyService {
+    private static final Logger logger = Logger.getLogger(FileCopyService.class);
+
     private FileHandler fileHandler;
     private ThreadManager threadManager;
 
@@ -23,7 +27,11 @@ public class FileCopyService {
 
     public void copyFiles() {
         try{
-            fileHandler.fillFilePathMap("dummy");
+            logger.info("Starting to fill file path map");
+            fileHandler.fillFilePathMap(".*");
+            logger.info("Starting to create destination directories");
+            fileHandler.createDestinationDirectories();
+            
             Map<Path, Path> sourceDestinationMap = fileHandler.getFilePathMap();
             Set<Path> filesToCopy = sourceDestinationMap.keySet();
 
@@ -35,10 +43,9 @@ public class FileCopyService {
 
             // Pass the tasks to the ThreadManager for execution
             threadManager.executeTasks(tasks);
-            fileHandler.createDestinationDirectories();
         } catch (Exception e) {
             // Log the exception
-            // logger.error("Something went wrong",e);
+            logger.error("Something went wrong",e);
         }
     }
 }

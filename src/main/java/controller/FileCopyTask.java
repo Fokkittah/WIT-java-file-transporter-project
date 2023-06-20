@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.log4j.Logger;
 
 public class FileCopyTask implements Runnable {
+    private static final Logger logger = Logger.getLogger(FileCopyTask.class);
+
     private Path sourceFile;
     private Path destinationPath;
 
@@ -17,10 +20,12 @@ public class FileCopyTask implements Runnable {
     @Override
     public void run() {
         try {
+            logger.info("Starting copy for: " + sourceFile + " to: " + destinationPath);
             Files.copy(sourceFile, destinationPath);
             incrementCopiedFilesCount();
+            logger.info("Finished copy for: " + sourceFile + " to: " + destinationPath);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to copy file: " + sourceFile, e);
         }
     }
 
