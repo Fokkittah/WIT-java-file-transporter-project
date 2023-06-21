@@ -1,24 +1,27 @@
+
+/**
+ * @author Mateusz Marchel
+ */
+
 package view;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.Path;
 
 public class FileCopyTask implements Runnable {
-    private File sourceFile;
-    private File destinationDirectory;
+    private Path sourceFile;
+    private Path destinationPath;
 
-    public FileCopyTask(File sourceFile, File destinationDirectory) {
+    public FileCopyTask(Path sourceFile, Path destinationPath) {
         this.sourceFile = sourceFile;
-        this.destinationDirectory = destinationDirectory;
+        this.destinationPath = destinationPath;
     }
 
     @Override
     public void run() {
         try {
-            File destinationFile = new File(destinationDirectory, sourceFile.getName());
-            Files.copy(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(sourceFile, destinationPath);
             incrementCopiedFilesCount();
         } catch (IOException e) {
             e.printStackTrace();

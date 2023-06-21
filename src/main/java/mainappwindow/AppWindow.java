@@ -1,4 +1,4 @@
-package view;
+package mainappwindow;
 
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import java.awt.BorderLayout;
 import javax.swing.JSeparator;
 import java.awt.*;
 import javax.swing.JTextField;
@@ -44,7 +45,7 @@ import javax.swing.JTextField;
         sourceButton = new JButton("Select Source"); // create source button
         destinationButton = new JButton("Select Destination"); // create destination button
         startButton = new JButton("Start"); // create start button
-        fileMaskField = new JTextField(".*");
+        fileMaskField = new JTextField("*.*");
 
         northButtonPanel.add(sourceButton); // add source button to the panel
         northButtonPanel.add(destinationButton); // add destination button to the panel
@@ -99,9 +100,5 @@ import javax.swing.JTextField;
 
     public JFrame getFrame(){
         return frame;
-    }
-
-    public String getFileMask() {
-        return fileMaskField.getText();
     }
 }
